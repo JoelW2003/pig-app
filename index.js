@@ -30,10 +30,47 @@ function generateGrid(){
             } else {
                 square.style.backgroundColor = 'red';
             }
+
+            saveAllGrids();
         };
     }
 
     const gridContainer = document.getElementById('grid-container');
     gridContainer.appendChild(newGrid);
 
+    saveAllGrids();
+
 }
+
+/* Save gridContainer in brower's storage */
+function saveAllGrids() {
+    const gridContainer = document.getElementById('grid-container');
+    localStorage.setItem('gridHTML', gridContainer.innerHTML);
+}
+
+
+function restoreAllGrids(){
+    const savedHTML = localStorage.getItem('gridHTML');
+    if (savedHTML){
+        const gridContainer = document.getElementById('grid-container');
+        gridContainer.innerHTML = savedHTML;
+
+        // Reattach click events to each square
+        container.querySelectorAll('.square').forEach(square => {
+            square.addEventListener('click', () => {
+                square.style.backgroundColor =
+                    square.style.backgroundColor === 'red' ? 'lightblue' : 'red';
+                saveAllGrids();
+            });
+        });
+    }
+
+}
+
+function clearGrids(){
+    const gridContainer = document.getElementById('grid-container');
+    gridContainer.innerHTML = '';
+    saveAllGrids();
+}
+
+window.addEventListener('DOMContentLoaded', restoreAllGrids);
